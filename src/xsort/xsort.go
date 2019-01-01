@@ -1,7 +1,28 @@
 package xsort
 
+// 检测数列是否有序（升序）
+func CheckListOrdinal(list []int) bool {
+	for i := 1; i < len(list); i++ {
+		if list[i] < list[i-1] {
+			return false
+		}
+	}
+	return true
+}
+
+// 检测数列是否有序（降序）
+func CheckListOrdinalDesc(list []int) bool {
+	for i := 1; i < len(list); i++ {
+		if list[i] > list[i-1] {
+			return false
+		}
+	}
+	return true
+}
+
 // 简单冒泡排序(升序)
-func SimpleBubbleSort(slice []int, length int) {
+func SimpleBubbleSort(slice []int) {
+	length := len(slice)
 	for i := 0; i < length; i++ {
 		for j := i + 1; j < length; j++ {
 			if slice[j] < slice[i] {
@@ -12,7 +33,8 @@ func SimpleBubbleSort(slice []int, length int) {
 }
 
 // 简单冒泡排序(降序)
-func SimpleBubbleSortDesc(slice []int, length int) {
+func SimpleBubbleSortDesc(slice []int) {
+	length := len(slice)
 	for i := 0; i < length; i++ {
 		for j := i + 1; j < length; j++ {
 			if slice[j] > slice[i] {
@@ -23,7 +45,8 @@ func SimpleBubbleSortDesc(slice []int, length int) {
 }
 
 // 标准冒泡排序(升序)
-func StandardBubbleSort(slice []int, length int) {
+func StandardBubbleSort(slice []int) {
+	length := len(slice)
 	for i := 0; i < length; i++ {
 		for j := length - 1; j > i; j-- {
 			if slice[j] < slice[j-1] {
@@ -34,7 +57,8 @@ func StandardBubbleSort(slice []int, length int) {
 }
 
 // 标准冒泡排序(降序)
-func StandardBubbleSortDesc(slice []int, length int) {
+func StandardBubbleSortDesc(slice []int) {
+	length := len(slice)
 	for i := 0; i < length; i++ {
 		for j := length - 1; j > i; j-- {
 			if slice[j] > slice[j-1] {
@@ -45,7 +69,8 @@ func StandardBubbleSortDesc(slice []int, length int) {
 }
 
 // 优化冒泡排序(升序)
-func TuningBubbleSort(slice []int, length int) {
+func TuningBubbleSort(slice []int) {
+	length := len(slice)
 	flag := true //加上flag标记，当已经有序时直接结束排序
 	for i := 0; i < length && flag; i++ {
 		flag = false
@@ -59,7 +84,8 @@ func TuningBubbleSort(slice []int, length int) {
 }
 
 // 优化冒泡排序(降序)
-func TuningBubbleSortDesc(slice []int, length int) {
+func TuningBubbleSortDesc(slice []int) {
+	length := len(slice)
 	flag := true //加上flag标记，当已经有序时直接结束排序
 	for i := 0; i < length && flag; i++ {
 		flag = false
@@ -73,7 +99,8 @@ func TuningBubbleSortDesc(slice []int, length int) {
 }
 
 // 简单选择排序(升序)
-func SimpleSelectSort(slice []int, length int) {
+func SimpleSelectSort(slice []int) {
+	length := len(slice)
 	for i := 0; i < length; i++ {
 		min := i
 		for j := i + 1; j < length; j++ {
@@ -88,7 +115,8 @@ func SimpleSelectSort(slice []int, length int) {
 }
 
 // 简单选择排序(降序)
-func SimpleSelectSortDesc(slice []int, length int) {
+func SimpleSelectSortDesc(slice []int) {
+	length := len(slice)
 	for i := 0; i < length; i++ {
 		max := i
 		for j := i + 1; j < length; j++ {
@@ -103,12 +131,12 @@ func SimpleSelectSortDesc(slice []int, length int) {
 }
 
 // 直接插入排序(升序)
-func DirectInsertSort(slice []int, length int) {
-	for i := 1; i < length; i++ {
-		if slice[i] < slice[i-1] {
+func DirectInsertSort(slice []int) {
+	for i := 1; i < len(slice); i++ {
+		if slice[i] < slice[i-1] { //改为slice[i] > slice[i-1]则是降序
 			var j int
 			tmp := slice[i]
-			for j = i - 1; j >= 0 && tmp < slice[j]; j-- {
+			for j = i - 1; j >= 0 && tmp < slice[j]; j-- { //改为tmp > slice[j]则是降序
 				slice[j+1] = slice[j]
 			}
 			slice[j+1] = tmp
@@ -117,8 +145,8 @@ func DirectInsertSort(slice []int, length int) {
 }
 
 // 直接插入排序(降序)
-func DirectInsertSortDesc(slice []int, length int) {
-	for i := 1; i < length; i++ {
+func DirectInsertSortDesc(slice []int) {
+	for i := 1; i < len(slice); i++ {
 		if slice[i] > slice[i-1] {
 			var j int
 			tmp := slice[i]
@@ -128,4 +156,116 @@ func DirectInsertSortDesc(slice []int, length int) {
 			slice[j+1] = tmp
 		}
 	}
+}
+
+// 直接插入排序(升序),此方法时间消耗大概是1的两倍，但是代码简洁一些
+func DirectInsertSort2(slice []int) {
+	insertSort(slice, 1)
+}
+
+func DirectInsertSort3(slice []int) {
+	insertSort2(slice, 1)
+}
+
+func DirectInsertSortDesc2(slice []int) {
+	insertSortDesc(slice, 1)
+}
+
+// 增量排序(升序)
+func insertSort(slice []int, increment int) {
+	if increment < 1 { //插入排序最小增量为1
+		increment = 1
+	}
+	for i := increment; i < len(slice); i++ {
+		if slice[i] < slice[i-increment] {
+			for j := i; j >= increment && slice[j] < slice[j-increment]; j -= increment {
+				slice[j], slice[j-increment] = slice[j-increment], slice[j]
+			}
+		}
+	}
+}
+
+// 这种方式比insertSort稍微快一些，测过1w条随机数据排序大概是第一种的一倍
+// 主要是g第一种a,b = b,a 比第二种多交换了好多次
+func insertSort2(slice []int, increment int) {
+	if increment < 1 { //插入排序最小增量为1
+		increment = 1
+	}
+	for i := increment; i < len(slice); i++ {
+		if slice[i] < slice[i-increment] { //改为slice[i] > slice[i-1]则是降序
+			var j int
+			tmp := slice[i]
+			for j = i - increment; j >= 0 && tmp < slice[j]; j -= increment { //改为tmp > slice[j]则是降序
+				slice[j+increment] = slice[j]
+			}
+			slice[j+increment] = tmp
+		}
+	}
+}
+
+// 增量排序(降序)
+func insertSortDesc(slice []int, increment int) {
+	if increment < 1 { //插入排序最小增量为1
+		increment = 1
+	}
+	for i := increment; i < len(slice); i++ {
+		for j := i; j >= increment && slice[j] > slice[j-increment]; j -= increment {
+			slice[j], slice[j-increment] = slice[j-increment], slice[j]
+		}
+	}
+}
+
+// 希尔排序
+func ShellSort(slice []int) {
+	increment := len(slice)
+	for {
+		increment = increment/3 + 1
+		insertSort2(slice, increment)
+		if increment <= 1 { //当增量小于等于1结束排序
+			break
+		}
+	}
+}
+
+// 希尔排序
+func ShellSortDesc(slice []int) {
+	increment := len(slice)
+	for {
+		increment = increment/3 + 1
+		insertSortDesc(slice, increment)
+		if increment <= 1 {
+			break
+		}
+	}
+}
+
+// 分区，寻找枢纽位置返回
+func partition(slice []int, low, high int) int {
+	pivotkey := slice[low]
+	for low < high {
+		for low < high && pivotkey <= slice[high] {
+			high--
+		}
+		slice[low], slice[high] = slice[high], slice[low]
+		for low < high && pivotkey >= slice[low] {
+			low++
+		}
+		slice[low], slice[high] = slice[high], slice[low]
+	}
+	return low
+}
+
+// 快速排序递归调用
+func quickSort(slice []int, low, high int) {
+	if low < high {
+		// 寻找枢纽，并递归
+		pivot := partition(slice, low, high)
+		quickSort(slice, low, pivot)
+		quickSort(slice, pivot+1, high)
+	}
+}
+
+// 快速排序
+func QuickSort(slice []int) {
+	quickSort(slice, 0, len(slice)-1)
 }
