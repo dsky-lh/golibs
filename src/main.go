@@ -149,13 +149,43 @@ func TestShellSortDesc(num int) {
 }
 
 func TestQuickSort(num int) {
-	fmt.Println("test quick sort desc with num of:", num)
+	fmt.Println("test quick sort with num of:", num)
 	list := genIntSlice(num, num)
 	// fmt.Println("list:", list)
 	start := time.Now().UnixNano()
 	xsort.QuickSort(list)
 	end := time.Now().UnixNano()
-	fmt.Println("quick sort desc use ", (end-start)/1e6, "ms")
+	fmt.Println("quick sort use ", (end-start)/1e6, "ms")
+	if !xsort.CheckListOrdinal(list) {
+		fmt.Println("sort err")
+		return
+	}
+	// fmt.Println("sort list:", list)
+}
+
+func TestQuickSort2(num int) {
+	fmt.Println("test quick sort 2 with num of:", num)
+	list := genIntSlice(num, num)
+	// fmt.Println("list:", list)
+	start := time.Now().UnixNano()
+	xsort.QuickSort2(list)
+	end := time.Now().UnixNano()
+	fmt.Println("quick sort 2 use ", (end-start)/1e6, "ms")
+	if !xsort.CheckListOrdinal(list) {
+		fmt.Println("sort err")
+		return
+	}
+	// fmt.Println("sort list:", list)
+}
+
+func TestHeapSort(num int) {
+	fmt.Println("test heap sort with num of:", num)
+	list := genIntSlice(num, num)
+	// fmt.Println("list:", list)
+	start := time.Now().UnixNano()
+	xsort.HeapSort(list)
+	end := time.Now().UnixNano()
+	fmt.Println("heap sort use ", (end-start)/1e6, "ms")
 	if !xsort.CheckListOrdinal(list) {
 		fmt.Println("sort err")
 		return
@@ -183,5 +213,8 @@ func main() {
 	TestShellSort(10000000)
 	// TestShellSortDesc(10000000)
 
-	TestQuickSort(10000000)
+	// TestQuickSort(10000000)
+	// TestQuickSort2(10000000)
+
+	TestHeapSort(10000000)
 }

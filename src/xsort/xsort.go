@@ -163,10 +163,12 @@ func DirectInsertSort2(slice []int) {
 	insertSort(slice, 1)
 }
 
+// 直接插入排序(升序)，此方法比1时间消耗久一点。
 func DirectInsertSort3(slice []int) {
 	insertSort2(slice, 1)
 }
 
+// 直接插入排序(降序)
 func DirectInsertSortDesc2(slice []int) {
 	insertSortDesc(slice, 1)
 }
@@ -239,7 +241,7 @@ func ShellSortDesc(slice []int) {
 	}
 }
 
-// 分区，寻找枢纽位置返回
+// 分区，寻找枢轴位置返回
 func partition(slice []int, low, high int) int {
 	pivotkey := slice[low]
 	for low < high {
@@ -258,9 +260,9 @@ func partition(slice []int, low, high int) int {
 // 快速排序递归调用
 func quickSort(slice []int, low, high int) {
 	if low < high {
-		// 寻找枢纽，并递归
+		// 寻找枢轴，并递归
 		pivot := partition(slice, low, high)
-		quickSort(slice, low, pivot)
+		quickSort(slice, low, pivot-1)
 		quickSort(slice, pivot+1, high)
 	}
 }
@@ -268,4 +270,73 @@ func quickSort(slice []int, low, high int) {
 // 快速排序
 func QuickSort(slice []int) {
 	quickSort(slice, 0, len(slice)-1)
+}
+
+// 快速排序优化方法：
+// 1.三数取中法和九数取中法
+// 2.优化不必要的交换
+// 3.最小数组时采用直接插入而不采用快速排序
+// 4.优化递归操作（采用尾递归的方法）
+func partition2(slice []int, low, high int) int {
+	pivotkey := slice[low]
+	for low < high {
+		for low < high && pivotkey <= slice[high] {
+			high--
+		}
+		slice[low] = slice[high]
+		for low < high && pivotkey >= slice[low] {
+			low++
+		}
+		slice[high] = slice[low]
+	}
+	slice[low] = pivotkey
+	return low
+}
+
+func quickSort2(slice []int, low, high int) {
+	for low < high {
+		pivot := partition2(slice, low, high)
+		quickSort2(slice, low, pivot-1)
+		low = pivot + 1
+	}
+}
+
+func QuickSort2(slice []int) {
+	quickSort2(slice, 0, len(slice)-1)
+}
+
+// 调整pos位置的结点，使之成为一个大顶堆
+func adjustHeap(slice []int, pos int) {
+	node := pos
+	length := len(slice)
+	for node < length/2 {
+		// 找到node结点左子结点的位置
+		child := 2*node + 1
+		// 如果右子结点位置不在数列中且右节点值比左子结点值大，则将child指向右子节点位置
+		if child+1 < length && slice[child] < slice[child+1] {
+			child++
+		}
+		// 如果child指向的位置不在数列中或者child位置结点的值不大于父节点
+		if child >= length || slice[child] <= slice[node] {
+			break
+		}
+		// 将node结点与其较大子结点的值交换
+		slice[node], slice[child] = slice[child], slice[node]
+		// 将子结点的位置赋给node继续往下调整
+		node = child
+	}
+}
+
+// 堆排序
+func HeapSort(slice []int) {
+	// 将数列slice调整为大顶堆,一定得从后往前调整，
+	for i := len(slice) - 1; i >= 0; i-- {
+		adjustHeap(slice, i)
+	}
+	for i := len(slice) - 1; i >= 1; i-- {
+		// 将大顶堆中根节点值与数列最后一位数交换
+		slice[0], slice[i] = slice[i], slice[0]
+		// 然后调整根节点位置使剩余数列依然是大顶堆
+		adjustHeap(slice[:i-1], 0)
+	}
 }
