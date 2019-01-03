@@ -193,6 +193,21 @@ func TestHeapSort(num int) {
 	// fmt.Println("sort list:", list)
 }
 
+func TestMergeSort(num int) {
+	fmt.Println("test merge sort with num of:", num)
+	list := genIntSlice(num, num)
+	// fmt.Println("list:", list)
+	start := time.Now().UnixNano()
+	xsort.MergeSort(list)
+	end := time.Now().UnixNano()
+	fmt.Println("merge sort use ", (end-start)/1e6, "ms")
+	if !xsort.CheckListOrdinal(list) {
+		fmt.Println("sort err")
+		return
+	}
+	// fmt.Println("sort list:", list)
+}
+
 func main() {
 	// TestBubbleSort(1000)
 	// TestBubbleSort(10000)
@@ -213,8 +228,10 @@ func main() {
 	TestShellSort(10000000)
 	// TestShellSortDesc(10000000)
 
-	// TestQuickSort(10000000)
+	TestQuickSort(10000000)
 	// TestQuickSort2(10000000)
 
 	TestHeapSort(10000000)
+
+	TestMergeSort(10000000)
 }

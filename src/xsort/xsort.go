@@ -340,3 +340,53 @@ func HeapSort(slice []int) {
 		adjustHeap(slice[:i-1], 0)
 	}
 }
+
+func merge(slice []int, low, mid, high int) {
+	left := make([]int, 0)
+	for i := low; i <= mid; i++ {
+		left = append(left, slice[i])
+	}
+	right := make([]int, 0)
+	for j := mid + 1; j <= high; j++ {
+		right = append(right, slice[j])
+	}
+
+	i, j := 0, 0
+	leftLen, rightLen := len(left), len(right)
+	for k := low; k <= high; k++ {
+		// 如果左集合已经遍历完
+		if i >= leftLen {
+			slice[k] = right[j]
+			j++
+			continue
+		}
+		// 如果右集合已经遍历完
+		if j >= rightLen {
+			slice[k] = left[i]
+			i++
+			continue
+		}
+		// 左右集合都没有便利完
+		if left[i] <= right[j] {
+			slice[k] = left[i]
+			i++
+		} else {
+			slice[k] = right[j]
+			j++
+		}
+	}
+}
+
+func mergeSort(slice []int, low, high int) {
+	if low < high {
+		mid := (high + low) / 2
+		mergeSort(slice, low, mid)
+		mergeSort(slice, mid+1, high)
+		merge(slice, low, mid, high)
+	}
+}
+
+// 归并排序
+func MergeSort(slice []int) {
+	mergeSort(slice, 0, len(slice)-1)
+}
