@@ -337,10 +337,11 @@ func HeapSort(slice []int) {
 		// 将大顶堆中根节点值与数列最后一位数交换
 		slice[0], slice[i] = slice[i], slice[0]
 		// 然后调整根节点位置使剩余数列依然是大顶堆
-		adjustHeap(slice[:i-1], 0)
+		adjustHeap(slice[:i], 0)
 	}
 }
 
+// 合并两个已经排好序的序列
 func merge(slice []int, low, mid, high int) {
 	left := make([]int, 0)
 	for i := low; i <= mid; i++ {
@@ -389,4 +390,40 @@ func mergeSort(slice []int, low, high int) {
 // 归并排序
 func MergeSort(slice []int) {
 	mergeSort(slice, 0, len(slice)-1)
+}
+
+// 合并左右子序列返回新的有序数列
+func merge2(left, right []int) []int {
+	result := make([]int, 0)
+	i, j := 0, 0
+	leftLen, rightLen := len(left), len(right)
+	for i < leftLen && j < rightLen {
+		if left[i] <= right[j] {
+			result = append(result, left[i])
+			i++
+		} else {
+			result = append(result, right[j])
+			j++
+		}
+	}
+	result = append(result, left[i:]...)
+	result = append(result, right[j:]...)
+	return result
+}
+
+// 归并函数，先递归拆分序列成小于2的很多歌子序列
+// 然后不断归并拆分的左右两个子序列然后合并
+func mergeSort2(slice []int) []int {
+	if len(slice) < 2 {
+		return slice
+	}
+
+	mid := len(slice) / 2
+	left := mergeSort2(slice[0:mid])
+	right := mergeSort2(slice[mid:])
+	return merge2(left, right)
+}
+
+func MergeSort2(slice *[]int) {
+	*slice = mergeSort2(*slice)
 }
