@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"golibs/xsort"
 	"math/rand"
 	"time"
-	"xsort"
 )
 
 // 随机生成固定范围内固定数量的int类型切片
